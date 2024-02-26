@@ -1,0 +1,63 @@
+const themeChanger = document.querySelector(".theme-changer");
+
+let apiKey = "936082b7aab19a021dda7d9b";
+
+let api = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/USD`;
+const fromDropDown = document.getElementById("from-currency-select");
+const toDropDown = document.getElementById("to-currency-select");
+
+//Create dropdown from the currencies array
+currencies.forEach((currency) => {
+  const option = document.createElement("option");
+  option.value = currency;
+  option.text = currency;
+  fromDropDown.add(option);
+});
+
+//Repeat same thing for the other dropdown
+currencies.forEach((currency) => {
+  const option = document.createElement("option");
+  option.value = currency;
+  option.text = currency;
+  toDropDown.add(option);
+});
+
+//Setting default values
+fromDropDown.value = "EUR";
+toDropDown.value = "RON";
+
+let convertCurrency = () => {
+  //Create References
+  const amount = document.querySelector("#amount").value;
+  const fromCurrency = fromDropDown.value;
+  const toCurrency = toDropDown.value;
+
+  //If amount input field is not empty
+  if (amount.value != 0) {
+    fetch(api)
+      .then((resp) => resp.json())
+      .then((data) => {
+        let fromExchangeRate = data.conversion_rates[fromCurrency];
+        let toExchangeRate = data.conversion_rates[toCurrency];
+        const convertedAmount = (amount / fromExchangeRate) * toExchangeRate;
+        result.innerHTML = `${amount} ${fromCurrency} = ${convertedAmount.toFixed(
+          2
+        )} ${toCurrency}`;
+      });
+  } else {
+    result.innerHTML = "Please, enter a value for the amount!";
+  }
+};
+
+document
+  .querySelector("#convert-button")
+  .addEventListener("click", convertCurrency);
+window.addEventListener("load", convertCurrency);
+
+themeChanger.addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+  const isDarkMode = document.body.classList.contains("dark");
+  themeChanger.innerHTML = isDarkMode
+    ? `<i class="fa-regular fa-sun"></i>&nbsp;Light Mode`
+    : `<i class="fa-regular fa-moon"></i>&nbsp;Dark Mode`;
+});
