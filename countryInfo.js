@@ -12,6 +12,19 @@ const languages = document.querySelector(".languages");
 const themeChanger = document.querySelector(".theme-changer");
 const countryMap = document.querySelector(".map-container");
 
+function initMap(lat, lng) {
+  var map = new google.maps.Map(document.getElementById("map"), {
+    center: { lat: lat, lng: lng },
+    zoom: 7,
+  });
+
+  var marker = new google.maps.Marker({
+    position: { lat: lat, lng: lng },
+    map: map,
+    title: "Your Location",
+  });
+}
+
 fetch(`https://restcountries.com/v3.1/name/${countryName}?fullText=true`)
   .then((res) => res.json())
   .then(([country]) => {
@@ -22,6 +35,8 @@ fetch(`https://restcountries.com/v3.1/name/${countryName}?fullText=true`)
     topLevelDomain.innerText = country.tld;
     capital.innerText = country.capital;
     subRegion.innerText = country.subregion;
+
+    initMap(country.latlng[0], country.latlng[1]);
 
     if (country.name.nativeName) {
       nativeName.innerText = Object.values(country.name.nativeName)[0].common;
@@ -41,3 +56,5 @@ fetch(`https://restcountries.com/v3.1/name/${countryName}?fullText=true`)
   });
 
 themeChanger.addEventListener("click", toggleDarkMode);
+
+//AIzaSyDPP_WqSY7YqntzrJX5WMDQ1kGqnMvzrlE
