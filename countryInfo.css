@@ -53,3 +53,9 @@
     max-width: 400px;
   }
 }
+
+#map {
+  margin-top: 50px;
+  height: 300px;
+  width: 100%;
+}
